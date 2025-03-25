@@ -1,19 +1,19 @@
-import { CreateEmailService } from "@/services/email";
+import { GetServerSideProps } from "next";
+import React, { useEffect } from "react";
+import requestIp from "request-ip";
+import { Language } from "../interfaces";
 import {
   GetLandingPageService,
   ResponseGetLandingPageService,
-} from "@/services/landingPage";
-import Head from "next/head";
-import { useRouter } from "next/router";
+} from "../services/landingPage";
 import { GoogleAnalytics } from "nextjs-google-analytics";
-import React, { useEffect, useState } from "react";
-import Swal from "sweetalert2";
-import { event } from "nextjs-google-analytics";
-import { DirectLinkService } from "@/services/merchant";
-import requestIp from "request-ip";
-import { GetServerSideProps } from "next";
-import { Language } from "../interfaces";
 import * as crypto from "crypto";
+import { useRouter } from "next/router";
+import Swal from "sweetalert2";
+import { DirectLinkService } from "../services/merchant";
+import { CreateEmailService } from "../services/email";
+import Head from "next/head";
+import { event } from "nextjs-google-analytics";
 
 function Index({
   landingPage,
@@ -187,6 +187,7 @@ function Index({
 }
 
 export default Index;
+
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   let host = ctx.req.headers.host;
   let country = "United States";
@@ -219,6 +220,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     const landingPage = await GetLandingPageService({
       domain: host,
       language: userLanguage,
+      route: ctx.resolvedUrl,
     });
     return {
       props: {
